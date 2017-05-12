@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDTO getUserInfo(UserDTO user) {
 		return userMapper.getUserInfo(user);
-
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 		Integer seq = commonMapper.getSeqByName(TableSeqName.T_USER_SEQ);
 		StringBuffer idUser = new StringBuffer();
 		idUser.append(Prefix.USER_ID)
-			  .append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDDHHMMSS))
+			  .append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD))
 			  .append(String.format("%08d", seq));
 		user.setIdUser(idUser.toString());
 		logger.trace("新增用户：" + user);
