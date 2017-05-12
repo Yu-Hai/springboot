@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同，源代码没有去看，猜测应该是通过"这里的namespace.下边方法的id"来定位方法的 -->
+<mapper namespace="com.office.springboot.user.mapper.UserMapper">
+
+	<!-- 若不需要自动返回主键，将useGeneratedKeys="true" keyProperty="id"去掉即可(当然如果不需要自动返回主键，直接用注解即可) -->
+	<insert id="insertUserWithBackId" parameterType="com.office.springboot.user.dto.UserDTO">
+       <![CDATA[
+       INSERT INTO t_user 
+       (
+       	   id_user,
+           username,
+           password
+       )
+       VALUES
+       (
+       	   #{idUser},
+           #{userName},
+           #{password}
+       )
+       ]]>
+	</insert>
+	
+	
+	<select id="getUserInfo" parameterType="com.office.springboot.user.dto.UserDTO" resultType="com.office.springboot.user.dto.UserDTO">
+		SELECT t.username 'userName',
+				t.password 'password'
+		FROM t_user t
+		WHERE t.username=#{userName}#
+	</select>
+
+</mapper>
