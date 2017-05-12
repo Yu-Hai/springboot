@@ -2,6 +2,12 @@ package com.office.springboot.user.dto;
 
 import com.office.springboot.common.form.CommonBaseForm;
 
+/**
+ * 用户DTO
+ * 
+ * @author Neo 2017-5-12
+ *
+ */
 public class UserDTO extends CommonBaseForm {
 
 	private String idUser;

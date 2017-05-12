@@ -10,6 +10,12 @@ import com.office.springboot.common.form.BaseObjectForm;
 import com.office.springboot.user.dto.UserDTO;
 import com.office.springboot.user.service.UserService;
 
+/**
+ * 用户模块Controller
+ * 
+ * @author Neo 2017-5-12
+ *
+ */
 @RestController
 public class UserController {
 

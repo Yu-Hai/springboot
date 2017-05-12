@@ -11,10 +11,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.office.springboot.common.constants.BusinessConstants;
-import com.office.springboot.common.constants.ResponseCode;
-import com.office.springboot.common.util.ResponseUtil;
+import com.office.springboot.common.client.ResponseHandler;
+import com.office.springboot.common.constant.CommonConstant;
+import com.office.springboot.common.constant.ResponseStatusCode;
 
+/**
+ * 异常拦截器
+ * @author Neo
+ * 2017-5-12
+ *
+ */
 public class ExceptionInterfaceIntercept extends HandlerInterceptorAdapter implements InitializingBean {
 	private static Logger logger = LoggerFactory.getLogger(ExceptionInterfaceIntercept.class);
 
@@ -24,9 +30,9 @@ public class ExceptionInterfaceIntercept extends HandlerInterceptorAdapter imple
 		if (ex != null) {
 			logger.error("拦截异常：" + ex.getMessage());
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("returnFlag", ResponseCode.RESPONSE_ERROR);
-			map.put("returnMsg", BusinessConstants.RESPONSE_ERROR_MSG);
-			ResponseUtil.writeContent(map, response);
+			map.put("returnFlag", ResponseStatusCode.RESPONSE_ERROR);
+			map.put("returnMsg", CommonConstant.SYSTEM_ERR_MSG);
+			ResponseHandler.writeContent(map, response);
 		}
 		super.afterCompletion(request, response, handler, ex);
 	}

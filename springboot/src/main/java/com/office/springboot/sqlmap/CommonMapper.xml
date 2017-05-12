@@ -6,8 +6,8 @@
 
 	<!-- 获取seq -->
 	<select id="getSeqByName" parameterType="java.lang.String" resultType="java.lang.Object">
-		SELECT nextval( 
-		#{seqName}# 
+		SELECT nextval(
+		#{seqName}#
 		)
 	</select>
 </mapper>

@@ -16,6 +16,11 @@ import com.office.springboot.user.dto.UserDTO;
 import com.office.springboot.user.mapper.UserMapper;
 import com.office.springboot.user.service.UserService;
 
+/**
+ * 用户模块 service
+ * 
+ * @author Neo 2017-5-12
+ */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -36,12 +41,12 @@ public class UserServiceImpl implements UserService {
 	public String insertUserWithBackId(UserDTO user) {
 		Integer seq = commonMapper.getSeqByName(TableSeqName.T_USER_SEQ);
 		StringBuffer idUser = new StringBuffer();
-		idUser.append(Prefix.USER_ID)
-			  .append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD))
-			  .append(String.format("%08d", seq));
+		idUser.append(Prefix.USER_ID).
+		       append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD)).
+			   append(String.format("%08d", seq));
 		user.setIdUser(idUser.toString());
 		logger.trace("新增用户：" + user);
-		userMapper.insertUserWithBackId(user);
+		userMapper.insertUser(user);
 		logger.trace("新增用户成功");
 		return idUser.toString();
 	}
