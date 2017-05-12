@@ -15,6 +15,8 @@
 		<thymeleaf.version>3.0.1.RELEASE</thymeleaf.version>
 		<thymeleaf-layout-dialect.version>2.0.1</thymeleaf-layout-dialect.version>
 		<java.version>1.8</java.version>
+		<common.lang.version>2.6</common.lang.version>
+		<fastjson.version>1.2.31</fastjson.version>
 	</properties>
 
 	<!-- Inherit defaults from Spring Boot -->
@@ -48,40 +50,53 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<!-- servlet 依赖. -->
-	       <dependency>
-	           <groupId>javax.servlet</groupId>
-	           <artifactId>javax.servlet-api</artifactId>
-	           <scope>provided</scope>
-	       </dependency>
-	   <!-- 使用 Spring Boot 默认的 Tomcat 作为应用服务器。-->
-       <dependency>
-           <groupId>org.springframework.boot</groupId>
-           <artifactId>spring-boot-starter-tomcat</artifactId>
-           <scope>provided</scope>
-       </dependency>
-       <dependency>
-           <groupId>org.apache.tomcat.embed</groupId>
-           <artifactId>tomcat-embed-jasper</artifactId>
-           <scope>provided</scope>
-       </dependency>
-       <!-- mybatis -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.2.8</version>
-        </dependency>
-        <!-- jstl -->
-        <dependency>
-		    <groupId>jstl</groupId>
-		    <artifactId>jstl</artifactId>
-	    <version>1.2</version>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
-        
+		<!-- 使用 Spring Boot 默认的 Tomcat 作为应用服务器。 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.2.8</version>
+		</dependency>
+		<!-- jstl -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${common.lang.version}</version>
+		</dependency>
+
+		<!-- json -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- Package as an executable jar -->
