@@ -1,5 +1,6 @@
 package com.office.springboot.user.service;
 
+import com.office.springboot.common.exception.BusinessException;
 import com.office.springboot.user.dto.UserDTO;
 
 /**
@@ -9,7 +10,7 @@ import com.office.springboot.user.dto.UserDTO;
  */
 public interface UserService {
 
-	UserDTO getUserInfo(UserDTO user);
+	UserDTO getUserInfo(UserDTO user) throws BusinessException;
 
-	String insertUserWithBackId(UserDTO user);
+	String insertUserWithBackId(UserDTO user) throws BusinessException;
 }

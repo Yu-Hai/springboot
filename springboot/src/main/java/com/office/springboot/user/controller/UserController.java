@@ -1,5 +1,7 @@
 package com.office.springboot.user.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,8 @@ import com.office.springboot.user.service.UserService;
 @RestController
 public class UserController {
 
+	private static Logger logger = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
 	private UserService userService;
 
@@ -34,17 +38,30 @@ public class UserController {
 
 	@RequestMapping("/app/user/getUserInfo")
 	public UserDTO getUserInfo(@ModelAttribute UserDTO user) {
-		UserDTO result = userService.getUserInfo(user);
-		result.setSuccessForm("操作成功！");
+		logger.trace("获取用户信息【入参】：" + user.toString());
+		UserDTO result = new UserDTO();
+		try {
+			result = userService.getUserInfo(user);
+			result.setSuccessForm("操作成功！");
+		} catch (Exception e) {
+			result.setErrorForm();
+		}
+		logger.trace("获取用户信息【出参】：" + result.toString());
 		return result;
 	}
 
 	@RequestMapping("/app/user/insertUser")
 	public BaseObjectForm insertUser(@ModelAttribute UserDTO user) {
+		logger.trace("新增用户【入参】：" + user.toString());
 		BaseObjectForm result = new BaseObjectForm();
-		String userId = userService.insertUserWithBackId(user);
-		result.setData(userId);
-		result.setSuccessForm("新增成功！");
+		try {
+			String userId = userService.insertUserWithBackId(user);
+			result.setData(userId);
+			result.setSuccessForm("新增成功！");
+		} catch (Exception e) {
+			result.setErrorForm();
+		}
+		logger.trace("新增用户【出参】：" + result.toString());
 		return result;
 	}
 

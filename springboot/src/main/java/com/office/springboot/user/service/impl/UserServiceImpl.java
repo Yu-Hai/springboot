@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.office.springboot.common.constant.CommonConstant.Prefix;
 import com.office.springboot.common.constant.CommonConstant.TableSeqName;
+import com.office.springboot.common.exception.BusinessException;
 import com.office.springboot.common.mapper.CommonMapper;
 import com.office.springboot.common.util.DateFormatUtils;
 import com.office.springboot.user.dto.UserDTO;
@@ -33,22 +34,32 @@ public class UserServiceImpl implements UserService {
 	private CommonMapper commonMapper;
 
 	@Override
-	public UserDTO getUserInfo(UserDTO user) {
-		return userMapper.getUserInfo(user);
+	public UserDTO getUserInfo(UserDTO user) throws BusinessException{
+		try {
+			return userMapper.getUserInfo(user);
+		} catch (Exception e) {
+			logger.error("获取用户【失败】");
+			throw new BusinessException(e);
+		}
 	}
 
 	@Override
-	public String insertUserWithBackId(UserDTO user) {
-		Integer seq = commonMapper.getSeqByName(TableSeqName.T_USER_SEQ);
-		StringBuffer idUser = new StringBuffer();
-		idUser.append(Prefix.USER_ID).
-		       append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD)).
-			   append(String.format("%08d", seq));
-		user.setIdUser(idUser.toString());
-		logger.trace("新增用户：" + user);
-		userMapper.insertUser(user);
-		logger.trace("新增用户成功");
-		return idUser.toString();
+	public String insertUserWithBackId(UserDTO user) throws BusinessException{
+		try {
+			Integer seq = commonMapper.getSeqByName(TableSeqName.T_USER_SEQ);
+			StringBuffer idUser = new StringBuffer();
+			idUser.append(Prefix.USER_ID).
+			       append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD)).
+				   append(String.format("%08d", seq));
+			user.setIdUser(idUser.toString());
+			logger.trace("新增用户：" + user);
+			userMapper.insertUser(user);
+			logger.trace("新增用户成功");
+			return idUser.toString();
+		} catch (Exception e) {
+			logger.error("新增用户【失败】"+user);
+			throw new BusinessException(e);
+		}
 	}
 
 }
