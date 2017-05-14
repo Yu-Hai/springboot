@@ -1,6 +1,7 @@
 package com.office.springboot.user.dto;
 
 import com.office.springboot.common.form.CommonBaseForm;
+import com.office.springboot.common.util.Bean2String;
 
 /**
  * 用户DTO
@@ -39,5 +40,12 @@ public class UserDTO extends CommonBaseForm {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	@Override
+	public String toString() {
+		return Bean2String.bean2String(this);
+	}
+	
+	
 
 }

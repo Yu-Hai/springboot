@@ -52,12 +52,12 @@ public class UserServiceImpl implements UserService {
 			       append(DateFormatUtils.formatDate(new Date(), DateFormatUtils.FORMAT_YYYYMMDD)).
 				   append(String.format("%08d", seq));
 			user.setIdUser(idUser.toString());
-			logger.trace("新增用户：" + user);
+			logger.trace("新增用户：" + user.toString());
 			userMapper.insertUser(user);
 			logger.trace("新增用户成功");
 			return idUser.toString();
 		} catch (Exception e) {
-			logger.error("新增用户【失败】"+user);
+			logger.error("新增用户【失败】"+user.toString());
 			throw new BusinessException(e);
 		}
 	}
