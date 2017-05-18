@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.office.springboot.common.form.BaseObjectForm;
+import com.office.springboot.common.form.CommonBaseForm;
 import com.office.springboot.user.dto.UserDTO;
 import com.office.springboot.user.service.UserService;
 
@@ -50,7 +51,7 @@ public class UserController {
 		return result;
 	}
 
-	@RequestMapping("/app/user/insertUser")
+	@RequestMapping("/app/user/userRegister.dox")
 	public BaseObjectForm insertUser(@ModelAttribute UserDTO user) {
 		logger.trace("新增用户【入参】：" + user.toString());
 		BaseObjectForm result = new BaseObjectForm();
@@ -64,5 +65,23 @@ public class UserController {
 		logger.trace("新增用户【出参】：" + result.toString());
 		return result;
 	}
+	
+	@RequestMapping("/app/user/userLogin.dox")
+	public CommonBaseForm userLogin(@ModelAttribute UserDTO user){
+		logger.trace("用户登录【入参】：" + user.toString());
+		CommonBaseForm result=new CommonBaseForm();
+		UserDTO dbUser=userService.getUserInfo(user);
+		if(dbUser.getPassword().equals(user.getPassword())){
+			
+		}
+		
+		
+		logger.trace("用户登录【出参】：" + user.toString());
+		return result;
+		
+	}
+	
+	
+	
 
 }

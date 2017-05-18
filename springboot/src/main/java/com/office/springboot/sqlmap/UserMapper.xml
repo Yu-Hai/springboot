@@ -24,11 +24,22 @@
 
 
 	<!-- 通过用户名称查询用户 -->
-	<select id="getUserInfo" parameterType="com.office.springboot.user.dto.UserDTO" resultType="com.office.springboot.user.dto.UserDTO">
-		SELECT t.username 'userName',
+	<select id="getUserInfo" parameterType="com.office.springboot.user.dto.UserDTO"
+		resultType="com.office.springboot.user.dto.UserDTO">
+		SELECT t.id_user 'idUser',
+		t.username 'userName',
 		t.password 'password'
 		FROM t_user t
-		WHERE t.username=#{userName}#
+		<trim prefix="WHERE" suffixOverrides="AND|OR">
+			<if test="idUser!=null and idUser!=''">
+				AND t.id_user=#{idUser}#
+			</if>
+			<if test="userName!=null and userName!=''">
+				AND t.username=#{userName}#
+			</if>
+			<if test="password!=null and password!=''">
+				AND t.password=#{password}#
+			</if>
+		</trim>
 	</select>
-
 </mapper>
