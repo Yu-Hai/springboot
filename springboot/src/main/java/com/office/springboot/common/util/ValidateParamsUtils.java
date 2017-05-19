@@ -13,7 +13,7 @@ import com.office.springboot.user.dto.UserDTO;
 /**
  * 参数校验工具
  * 
- * @author Administrator
+ * @author Administrator 2017-5-19
  *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -44,13 +44,13 @@ public class ValidateParamsUtils {
 				errors.add(paramName);
 			}
 		}
-		return errors.isEmpty()?null:"缺少必要的入参:" + errors.toString();
+		return errors.isEmpty() ? null : "缺少必要的入参:" + errors.toString();
 	}
 
 	/**
 	 * 检查对象格式的入参
 	 * 
-	 * @param params
+	 * @param param
 	 * @param paramNames
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public class ValidateParamsUtils {
 				errors.add(paramName);
 			}
 		}
-		return errors.isEmpty()?null:"缺少必要的入参:" + errors.toString();
+		return errors.isEmpty() ? null : "缺少必要的入参:" + errors.toString();
 	}
 
 	public static void main(String[] args) {
