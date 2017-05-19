@@ -30,15 +30,15 @@
 		t.username 'userName',
 		t.password 'password'
 		FROM t_user t
-		<trim prefix="WHERE" suffixOverrides="AND|OR">
+		<trim prefix="WHERE" prefixOverrides="and|or">
 			<if test="idUser!=null and idUser!=''">
-				AND t.id_user=#{idUser}#
+				AND t.id_user=#{idUser}
 			</if>
 			<if test="userName!=null and userName!=''">
-				AND t.username=#{userName}#
+				AND t.username=#{userName}
 			</if>
 			<if test="password!=null and password!=''">
-				AND t.password=#{password}#
+				AND t.password=#{password}
 			</if>
 		</trim>
 	</select>

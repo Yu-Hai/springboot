@@ -5,19 +5,22 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.office.springboot.common.client.ResponseHandler;
 import com.office.springboot.common.constant.ResponseStatusCode;
+import com.office.springboot.common.service.RedisService;
 import com.office.springboot.common.session.SessionAttributeNames;
 import com.office.springboot.common.util.PropertiesUtil;
+import com.office.springboot.common.util.SessionManagerUtils;
 import com.office.springboot.user.dto.UserDTO;
 
 /**
@@ -26,9 +29,15 @@ import com.office.springboot.user.dto.UserDTO;
  * @author Neo 2017-5-12
  *
  */
+@Component
 public class LoginInterfaceInterceptor extends HandlerInterceptorAdapter implements InitializingBean {
 	private static Logger logger = LoggerFactory.getLogger(LoginInterfaceInterceptor.class);
 
+	//private RedisServiceImpl redisService= (RedisServiceImpl) SpringContextConfig.getBean("redisService");
+	
+	@Autowired
+	private RedisService redisService;
+	
 	/**
 	 * Handler执行完成之后调用这个方法
 	 */
@@ -48,9 +57,6 @@ public class LoginInterfaceInterceptor extends HandlerInterceptorAdapter impleme
 			throws Exception {
 		String url = request.getRequestURI();
 		logger.trace("请求url：" + url);
-		HttpSession session = request.getSession();
-		logger.trace("SessionAttributeNames.CURRENT_USER:"
-				+ String.valueOf((session.getAttribute(SessionAttributeNames.CURRENT_USER) == null)));
 		if (url.contains("/do/") || url.endsWith(".do")) {
 			if (needLogin(request)) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -60,7 +66,6 @@ public class LoginInterfaceInterceptor extends HandlerInterceptorAdapter impleme
 				return false;
 			}
 		}
-
 		return super.preHandle(request, response, handler);
 	}
 
@@ -77,14 +82,24 @@ public class LoginInterfaceInterceptor extends HandlerInterceptorAdapter impleme
 	 */
 	public boolean needLogin(HttpServletRequest request) {
 		String isNeedLogin = PropertiesUtil.getProperty("isNeedLogin");
-		UserDTO userDTO = (UserDTO) request.getSession().getAttribute(SessionAttributeNames.CURRENT_USER);
-		logger.trace("SessionAttributeNames.CURRENT_USER:"
-				+ String.valueOf(request.getSession().getAttribute(SessionAttributeNames.CURRENT_USER)));
+		// 从Session中获取当前用户的ID
+		String currentIdUser = (String) request.getSession().getAttribute(SessionAttributeNames.CURRENT_ID_USER);
+		logger.trace("SessionAttributeNames.CURRENT_ID_USER:" + currentIdUser);
 		if ("true".equals(isNeedLogin)) {
-			if (userDTO == null) {
+			if (currentIdUser == null) {
 				return true;
 			}
-			if (StringUtils.isNotBlank(userDTO.getIdUser())) {
+			if (StringUtils.isNotBlank(currentIdUser)) {
+				// 通过用户的ID组装Redis中存储用户信息的Key
+				String key = SessionAttributeNames.CURRENT_USER + ":" + currentIdUser;
+				// 从Redis中获取当前用户的信息
+				UserDTO currentUser = (UserDTO) redisService.get(key);
+				// 判断Redis是否超时
+				if (StringUtils.isBlank(currentUser.getIdUser())) {
+					return true;
+				}
+				// 将获取到的用户信息存入Session中
+				SessionManagerUtils.addOrUpdateSessionInfo(request, SessionAttributeNames.CURRENT_USER, currentUser);
 				return false;
 			}
 		}

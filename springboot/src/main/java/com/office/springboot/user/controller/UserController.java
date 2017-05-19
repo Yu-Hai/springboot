@@ -1,8 +1,12 @@
 package com.office.springboot.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.office.springboot.common.form.BaseObjectForm;
 import com.office.springboot.common.form.CommonBaseForm;
+import com.office.springboot.common.service.RedisService;
+import com.office.springboot.common.session.SessionAttributeNames;
+import com.office.springboot.common.util.SessionManagerUtils;
+import com.office.springboot.common.util.ValidateParamsUtils;
 import com.office.springboot.user.dto.UserDTO;
 import com.office.springboot.user.service.UserService;
 
@@ -26,6 +34,14 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private RedisService redisService;
+
+	
+	/** Session 超时时间 **/
+	@Value("${expire.time.session.user}")
+	private Long EXPIRE_TIME;
 
 	@RequestMapping("/")
 	public String home() {
@@ -65,23 +81,34 @@ public class UserController {
 		logger.trace("新增用户【出参】：" + result.toString());
 		return result;
 	}
-	
+
 	@RequestMapping("/app/user/userLogin.dox")
-	public CommonBaseForm userLogin(@ModelAttribute UserDTO user){
+	public CommonBaseForm userLogin(HttpServletRequest request, @ModelAttribute UserDTO user) {
 		logger.trace("用户登录【入参】：" + user.toString());
-		CommonBaseForm result=new CommonBaseForm();
-		UserDTO dbUser=userService.getUserInfo(user);
-		if(dbUser.getPassword().equals(user.getPassword())){
-			
+		CommonBaseForm result = new CommonBaseForm();
+		String errorMsg = ValidateParamsUtils.checkParams(user, "userName", "password");
+		if (StringUtils.isNotBlank(errorMsg)) {
+			result.setValidateFailForm();
+		 	logger.trace("用户登录【出参】：" + user.toString());
+			return result;
 		}
-		
-		
+		UserDTO currentUser = userService.getUserInfo(user);
+		if (currentUser.getPassword().equals(user.getPassword())) {
+			String key = SessionAttributeNames.CURRENT_USER + ":" + currentUser.getIdUser();
+			//将用户信息存入Redis，将用户ID存入session，以实现session共享
+			logger.trace("Redis 中的用户Key：" + key);
+			redisService.set(key, currentUser, EXPIRE_TIME);
+			
+			SessionManagerUtils.addOrUpdateSessionInfo(request, SessionAttributeNames.CURRENT_ID_USER, currentUser.getIdUser());
+		}
 		logger.trace("用户登录【出参】：" + user.toString());
 		return result;
-		
 	}
-	
-	
-	
+
+	@RequestMapping("/app/user/getUserInfo.do")
+	public UserDTO getUserInfo(HttpServletRequest request) {
+		UserDTO result = (UserDTO) SessionManagerUtils.getSessionValue(request, SessionAttributeNames.CURRENT_USER);
+		return result;
+	}
 
 }

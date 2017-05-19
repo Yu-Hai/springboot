@@ -8,5 +8,8 @@ package com.office.springboot.common.session;
 public class SessionAttributeNames {
 
 	/** Current User **/
-	public final static String CURRENT_USER = "currentUser";
+	public final static String CURRENT_USER = "session:currentUser:";
+	
+	/** 当前用户的ID **/
+	public final static String CURRENT_ID_USER="session:currentIdUser:";
 }
